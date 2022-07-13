@@ -4,3 +4,23 @@
 
 @layer components {
 }
+
+@layer components {
+  .modal-container {
+    @apply fixed z-[1000] inset-0 opacity-0 flex justify-center items-center w-full h-full pointer-events-none;
+    background: rgba(0, 0, 0, 0.7);
+    transform: scale(0);
+    transition: all 0.3s ease;
+    &.ativo {
+      @apply opacity-100 pointer-events-auto;
+      transform: scale(1);
+      .modal-content {
+        @apply opacity-100;
+      }
+    }
+    .modal-content {
+      @apply z-[1001] fixed max-w-[90vw] max-h-[60vh] lg:max-h-[90vh] w-full lg:w-[50vw] lg:max-w-[37.5rem] flex flex-col p-8 overflow-x-hidden overflow-y-auto bg-white rounded-lg opacity-0;
+      transition: all 0.3s ease 0.3s;
+    }
+  }
+}

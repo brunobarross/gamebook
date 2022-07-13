@@ -8,13 +8,15 @@ import {
   getDocs,
   serverTimestamp,
 } from 'firebase/firestore/lite';
-import { X } from 'phosphor-react';
+import { Plus, PlusCircle, X } from 'phosphor-react';
+import Modal from './components/Modal';
 
 function App() {
   const [jogos, setJogos] = useState([]);
   const [novoJogo, setNovoJogo] = useState('');
-  const [statusJogo, setStatusJogo] = useState('');
+  const [statusJogo, setStatusJogo] = useState('Abandonado');
   const jogosCollectionRef = collection(db, 'games');
+  const [modalOpen, setModalOpen] = useState(false);
 
   const getGames = async () => {
     try {
@@ -28,16 +30,20 @@ function App() {
 
   const criarJogo = async (e) => {
     e.preventDefault();
-    await addDoc(jogosCollectionRef, {
+    const newGameObj = {
       nome: novoJogo,
       status: statusJogo,
       criado: serverTimestamp(),
-    });
+    };
+
+    await addDoc(jogosCollectionRef, newGameObj);
+    setJogos((prevState) => [...prevState, newGameObj]);
   };
 
   const deletarJogo = async (id) => {
     const jogoDoc = doc(db, 'games', id);
     await deleteDoc(jogoDoc);
+    setJogos(jogos.filter((jogo) => jogo.id !== id));
   };
 
   useEffect(() => {
@@ -45,81 +51,83 @@ function App() {
   }, []);
 
   return (
-    <div className="flex min-h-screen items-center justify-center">
-      <div className="container">
-        <div className=" mx-auto">
-          <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 rounded-md overflow-hidden">
-            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-              <tr>
-                <th scope="col" className="py-3 px-6">
-                  Nome
-                </th>
-                <th scope="col" className="py-3 px-6">
-                  Status
-                </th>
-                <th scope="col" className="py-3 px-6"></th>
-              </tr>
-            </thead>
-            <tbody>
-              {jogos &&
-                jogos.map(({ nome, status, id }) => {
-                  return (
-                    <tr
-                      key={id}
-                      className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-                    >
-                      <td className='scope="row" class="py-4 px-6 font-medium text-white whitespace-nowrap dark:text-white"'>
-                        {nome}
-                      </td>
-                      <td
-                        scope="row"
-                        className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                      >
-                        {status}
-                      </td>
-                      <td
-                        scope="row"
-                        className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                      >
-                        <button type="button" onClick={() => deletarJogo(id)}>
-                          Deletar
-                        </button>
-                      </td>
-                    </tr>
-                  );
-                })}
-            </tbody>
-          </table>
+    <div className="flex mt-32 items-center justify-center">
+      <div className="container px-6">
+        <button
+          className="mt-4 bg-primary-pure flex items-center justify-center w-[200px] h-12 text-white py-4 px-[.875rem] rounded-md text-sm cursor-pointer"
+          onClick={() => setModalOpen(!modalOpen)}
+        >
+          <PlusCircle size={16} color={'white'} className="mr-2" />
+          Novo Jogo
+        </button>
 
-          <form
-            className="mt-32 flex flex-col items-center justify-center "
-            onSubmit={criarJogo}
-          >
-            <input
-              className="w-full border border-neutral-800 py-3 px-4 outline-none rounded-sm  visited:to-blue-400"
-              id="nome"
-              name="nome"
-              type="text"
-              placeholder="Nome do jogo"
-              required
-              onChange={(e) => setNovoJogo(e.target.value)}
-            />
-            <select
-              className="mt-4 w-full border border-neutral-800 py-3 px-4 outline-none rounded-sm  visited:to-blue-400"
-              onChange={(e) => setStatusJogo(e.target.value)}
-              id="status"
-              name="status"
-              required
-            >
-              <option value="abandonado">abandonado</option>
-              <option value="terminado">terminado</option>
-              <option value="terminando">terminando</option>
-            </select>
-            <button className="mt-4 bg-blue-600 flex items-center justify-center w-full h-12 text-white">
-              Enviar
-            </button>
-          </form>
-        </div>
+        <table className="mt-16 table-auto w-full text-sm text-left text-white rounded-md  border border-neutral-10 ">
+          <thead className="text-xs text-neutral-60 uppercase bg-neutral-02 ">
+            <tr>
+              <th scope="col" className="py-3 px-2 ">
+                Nome
+              </th>
+              <th scope="col" className="py-3 px-2">
+                Status
+              </th>
+              <th scope="col" className="py-3 px-2 ">
+                Ações
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {jogos.length ? (
+              jogos.map(({ nome, status, id }) => {
+                return (
+                  <tr key={nome} className="bg-white border-b hover:bg-gray-50">
+                    <td
+                      scope="row"
+                      className="py-3 px-2 text-sm font-normal text-neutral-90 whitespace-nowrap"
+                    >
+                      {nome}
+                    </td>
+                    <td
+                      scope="row"
+                      className="py-3 px-2 text-sm font-normal text-neutral-90 whitespace-nowrap"
+                    >
+                      {status}
+                    </td>
+                    <td
+                      scope="row"
+                      className="py-3 px-2 text-sm font-normal text-neutral-90 whitespace-nowrap"
+                    >
+                      <button
+                        className=" grid place-items-center w-8 h-8 bg-alert-red-100 "
+                        type="button"
+                        onClick={() => deletarJogo(id)}
+                      >
+                        <X />
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })
+            ) : (
+              <tr>
+                <td
+                  colSpan={12}
+                  className="py-3 px-2 text-sm font-normal text-neutral-90 whitespace-nowrap text-center"
+                >
+                  Não há jogos cadastrados
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+      <div className={`modal-container ${modalOpen ? 'ativo' : ''}`}>
+        <Modal
+          setNovoJogo={setNovoJogo}
+          setStatusJogo={setStatusJogo}
+          criarJogo={criarJogo}
+          setModalOpen={setModalOpen}
+          modalOpen={modalOpen}
+        />
       </div>
     </div>
   );
