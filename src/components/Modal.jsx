@@ -7,6 +7,7 @@ const Modal = ({
   criarJogo,
   setModalOpen,
   modalOpen,
+  inputElement
 }) => {
   return (
     <div className="modal-content">
@@ -27,6 +28,7 @@ const Modal = ({
           type="text"
           placeholder="Nome do jogo"
           required
+          ref={inputElement}
           onChange={(e) => setNovoJogo(e.target.value)}
         />
         <select
