@@ -24,3 +24,10 @@
     }
   }
 }
+
+.rdt_Table {
+  @apply mt-16 table-auto w-full text-sm text-left text-white rounded-md  border border-neutral-10;
+}
+.rdt_TableHeadRow {
+  @apply hidden text-xs text-neutral-60 uppercase !bg-neutral-02;
+}

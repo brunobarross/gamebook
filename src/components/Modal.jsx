@@ -7,7 +7,7 @@ const Modal = ({
   criarJogo,
   setModalOpen,
   modalOpen,
-  inputElement
+  inputElement,
 }) => {
   return (
     <div className="modal-content">
@@ -38,9 +38,9 @@ const Modal = ({
           name="status"
           required
         >
-          <option value="abandonado">abandonado</option>
-          <option value="jogando">jogando</option>
-          <option value="finalizado">finalizando</option>
+          <option value="Abandonado">ABANDONADO</option>
+          <option value="Jogando">JOGANDO</option>
+          <option value="Finalizado">FINALIZADO</option>
         </select>
         <div className="btn-container flex justify-end">
           <button className="mt-4 bg-primary-pure flex items-center justify-center w-full lg:w-[200px] h-12 text-white py-4 px-[.875rem] rounded-md text-sm ">

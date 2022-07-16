@@ -9,14 +9,16 @@ import {
   serverTimestamp,
   onSnapshot,
 } from 'firebase/firestore';
-import { Plus, PlusCircle, UserFocus, X } from 'phosphor-react';
+import axios from 'axios';
+import { Plus, PlusCircle, Trash, UserFocus, X } from 'phosphor-react';
 import Modal from './components/Modal';
 import Tabela from './components/Tabela';
+import DataTable, { createTheme } from 'react-data-table-component';
 
 function App() {
   const [jogos, setJogos] = useState([]);
   const [novoJogo, setNovoJogo] = useState('');
-  const [statusJogo, setStatusJogo] = useState('abandonado');
+  const [statusJogo, setStatusJogo] = useState('Abandonado');
   const jogosCollectionRef = collection(db, 'games');
   const [modalOpen, setModalOpen] = useState(false);
   const inputElement = useRef();
@@ -36,10 +38,10 @@ function App() {
       nome: novoJogo,
       status: statusJogo,
       criado: serverTimestamp(),
-    }
+    };
     await addDoc(jogosCollectionRef, obj);
-    setJogos(...jogos, obj)
-    inputElement.current.value = ''
+    setJogos(...jogos, obj);
+    inputElement.current.value = '';
   };
 
   const deletarJogo = async (id) => {
@@ -53,6 +55,82 @@ function App() {
     }
   };
 
+  const columns = [
+    {
+      name: 'Nome',
+      selector: (row) => row.nome.toUpperCase(),
+      sortable: true,
+    },
+    {
+      name: 'Status',
+      selector: (row) => row.status.toUpperCase(),
+      sortable: true,
+    },
+    {
+      name: 'Ações',
+      cell: (row) => (
+        <>
+          <button
+            className=" grid place-items-center w-8 h-8 bg-alert-red-100 rounded-[4px] "
+            id={row.id}
+            onClick={(e) => deletarJogo(row.id)}
+          >
+            <Trash size={16} color="#fff" />
+          </button>
+        </>
+      ),
+    },
+  ];
+  const customStyles = {
+    rows: {
+      style: {
+        minHeight: '3rem', // override the row height
+      },
+    },
+    headCells: {
+      style: {
+        paddingLeft: '.5rem', // override the cell padding for head cells
+        paddingRight: '.5rem',
+      },
+    },
+    cells: {
+      style: {
+        paddingLeft: '.5rem', // override the cell padding for data cells
+        paddingRight: '.5rem',
+      },
+    },
+  };
+  const conditionalRowStyles = [
+    {
+      when: (row) => row.status == 'Finalizado',
+      style: {
+        backgroundColor: 'rgb(25,135,84)',
+        color: 'white',
+        '&:hover': {
+          cursor: 'pointer',
+        },
+      },
+    },
+    {
+      when: (row) => row.status == 'Jogando',
+      style: {
+        backgroundColor: '#FFC107',
+        '&:hover': {
+          cursor: 'pointer',
+        },
+      },
+    },
+    {
+      when: (row) => row.status == 'Abandonado',
+      style: {
+        backgroundColor: '#DC3545',
+        color: 'white',
+        '&:hover': {
+          cursor: 'pointer',
+        },
+      },
+    },
+  ];
   useEffect(() => {
     onSnapshot(collection(db, 'games'), (snapshot) =>
       setJogos(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))),
@@ -69,8 +147,15 @@ function App() {
           <PlusCircle size={16} color={'white'} className="mr-2" />
           Novo Jogo
         </button>
-        <Tabela jogos={jogos} deletarJogo={deletarJogo} />
-
+        {jogos.length && (
+          <DataTable
+            noDataComponent="Não há jogos cadastrados"
+            columns={columns}
+            data={jogos}
+            customStyles={customStyles}
+            conditionalRowStyles={conditionalRowStyles}
+          />
+        )}
       </div>
 
       <div className={`modal-container ${modalOpen ? 'ativo' : ''}`}>
