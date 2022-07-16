@@ -20,7 +20,6 @@ function App() {
     try {
       const data = await getDocs(jogosCollectionRef);
       setJogos(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-      console.log(jogos);
     } catch (err) {
       console.log(err);
     }
@@ -28,11 +27,14 @@ function App() {
 
   const criarJogo = async (e) => {
     e.preventDefault();
-    await addDoc(jogosCollectionRef, {
+    const obj = {
       nome: novoJogo,
       status: statusJogo,
       criado: serverTimestamp(),
-    });
+    }
+    await addDoc(jogosCollectionRef, obj);
+  
+    setJogos(...jogos, obj)
   };
 
   const deletarJogo = async (id) => {
