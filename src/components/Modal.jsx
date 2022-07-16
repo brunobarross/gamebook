@@ -36,9 +36,9 @@ const Modal = ({
           name="status"
           required
         >
-          <option value="Abandonado">Abandonado</option>
-          <option value="Zerado">Terminado</option>
-          <option value="Terminando">Zerado</option>
+          <option value="abandonado">abandonado</option>
+          <option value="jogando">jogando</option>
+          <option value="finalizado">finalizando</option>
         </select>
         <div className="btn-container flex justify-end">
           <button className="mt-4 bg-primary-pure flex items-center justify-center w-full lg:w-[200px] h-12 text-white py-4 px-[.875rem] rounded-md text-sm ">

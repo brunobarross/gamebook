@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { db } from './Firebase';
 import {
   addDoc,
@@ -7,8 +7,9 @@ import {
   doc,
   getDocs,
   serverTimestamp,
-} from 'firebase/firestore/lite';
-import { Plus, PlusCircle, X } from 'phosphor-react';
+  onSnapshot,
+} from 'firebase/firestore';
+import { Plus, PlusCircle, UserFocus, X } from 'phosphor-react';
 import Modal from './components/Modal';
 
 function App() {
@@ -30,31 +31,43 @@ function App() {
 
   const criarJogo = async (e) => {
     e.preventDefault();
-    const newGameObj = {
-      nome: novoJogo,
-      status: statusJogo,
-      criado: serverTimestamp(),
-    };
+    try {
+      const newGameObj = {
+        nome: novoJogo,
+        status: statusJogo,
+        criado: serverTimestamp(),
+      };
 
-    await addDoc(jogosCollectionRef, newGameObj);
-    setJogos((prevState) => [...prevState, newGameObj]);
+      await addDoc(jogosCollectionRef, newGameObj);
+      setJogos((prevState) => [...prevState, newGameObj]);
+      inputJogo.current.value = '';
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const deletarJogo = async (id) => {
-    const jogoDoc = doc(db, 'games', id);
-    await deleteDoc(jogoDoc);
-    setJogos(jogos.filter((jogo) => jogo.id !== id));
+    if (jogos) {
+      try {
+        await deleteDoc(doc(db, 'games', id));
+        setJogos(jogos.filter((jogo) => jogo.id !== id));
+      } catch (err) {
+        console.log(err);
+      }
+    }
   };
 
   useEffect(() => {
-    getGames();
+    onSnapshot(collection(db, 'games'), (snapshot) =>
+      setJogos(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))),
+    );
   }, []);
 
   return (
     <div className="flex mt-32 items-center justify-center">
       <div className="container px-6">
         <button
-          className="mt-4 bg-primary-pure flex items-center justify-center w-[200px] h-12 text-white py-4 px-[.875rem] rounded-md text-sm cursor-pointer"
+          className="mt-4 bg-primary-pure flex items-center justify-center w-[200px] h-12 text-white py-4 px-[.875rem] rounded-md text-sm cursor-pointer ml-auto"
           onClick={() => setModalOpen(!modalOpen)}
         >
           <PlusCircle size={16} color={'white'} className="mr-2" />
@@ -79,7 +92,7 @@ function App() {
             {jogos.length ? (
               jogos.map(({ nome, status, id }) => {
                 return (
-                  <tr key={nome} className="bg-white border-b hover:bg-gray-50">
+                  <tr key={id} className="bg-white border-b hover:bg-gray-50">
                     <td
                       scope="row"
                       className="py-3 px-2 text-sm font-normal text-neutral-90 whitespace-nowrap"
@@ -98,8 +111,8 @@ function App() {
                     >
                       <button
                         className=" grid place-items-center w-8 h-8 bg-alert-red-100 "
-                        type="button"
-                        onClick={() => deletarJogo(id)}
+                        id={id}
+                        onClick={(e) => deletarJogo(id)}
                       >
                         <X />
                       </button>
