@@ -1,0 +1,21 @@
+@layer components {
+    .sidebar {
+      @apply min-h-screen h-full bg-primary-pure w-[300px] flex flex-col fixed top-0 left-0 shrink-0 shadow-lg z-[9999];
+      transition: 0.3s ease;
+      .logo {
+        @apply px-4 py-8 text-white text-2xl font-semibold;
+      }
+      .sidebar-lista {
+        @apply pr-8;
+        li {
+          @apply mt-5;
+          a {
+            @apply inline-flex items-center py-5 px-4 w-full cursor-pointer rounded-r-lg text-white text-lg hover:bg-white hover:text-neutral-70 transition-all;
+            &.active {
+              @apply bg-white text-neutral-70;
+            }
+          }
+        }
+      }
+    }
+  }

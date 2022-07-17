@@ -4,15 +4,19 @@ import Modal from './components/Modal';
 import DataTable from 'react-data-table-component';
 import { HomeContext } from './contexts/HomeContext';
 import { TabelaContext } from './contexts/TabelaContext';
+import Navbar from './components/NavBar';
 
 const Home = () => {
   const home = React.useContext(HomeContext);
   const tabela = React.useContext(TabelaContext);
 
   return (
-    <div className="mx-auto w-full sm:pl-[300px] relative min-h-screen overflow-hidden flex  flex-col ">
+   
+    <div className="mx-auto w-full sm:pl-[300px] relative overflow-hidden flex flex-col ">
+       <Navbar/>
+      <div className="content">
       <button
-        className="mt-4 bg-primary-pure flex justify-center w-[200px] h-12 text-white py-4 px-[.875rem] rounded-md text-sm cursor-pointer ml-auto"
+        className=" bg-primary-pure flex items-center justify-center w-[200px] h-12 text-white py-4 px-[.875rem] rounded-md text-sm cursor-pointer"
         onClick={() => home.setModalOpen(!home.modalOpen)}
       >
         <PlusCircle size={16} color={'white'} className="mr-2" />
@@ -31,6 +35,8 @@ const Home = () => {
       <div className={`modal-container ${home.modalOpen ? 'ativo' : ''}`}>
         <Modal />
       </div>
+      </div>
+
     </div>
   );
 };

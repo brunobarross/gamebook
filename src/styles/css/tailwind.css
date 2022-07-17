@@ -1,54 +1,16 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import './components/Body.css';
+@import './components/Sidebar.css';
+@import './components/Content.css';
+@import './components/Tabela.css';
+@import './components/Modal.css';
 
-@layer components {
-}
+@import 'tailwindcss/utilities';
 
-@layer components {
-  .modal-container {
-    @apply fixed z-[1000] inset-0 opacity-0 flex justify-center items-center w-full h-full pointer-events-none;
-    background: rgba(0, 0, 0, 0.7);
-    transform: scale(0);
-    transition: all 0.3s ease;
-    &.ativo {
-      @apply opacity-100 pointer-events-auto;
-      transform: scale(1);
-      .modal-content {
-        @apply opacity-100;
-      }
-    }
-    .modal-content {
-      @apply z-[1001] fixed max-w-[90vw] max-h-[60vh] lg:max-h-[90vh] w-full lg:w-[50vw] lg:max-w-[37.5rem] flex flex-col p-8 overflow-x-hidden overflow-y-auto bg-white rounded-lg opacity-0;
-      transition: all 0.3s ease 0.3s;
-    }
-  }
-}
-@layer components {
-  .sidebar {
-    @apply min-h-screen h-full bg-primary-pure w-[300px] flex flex-col fixed top-0 left-0 shrink-0 shadow-lg z-[9999];
-    transition: 0.3s ease;
-    .logo {
-      @apply p-8;
-    }
-    .sidebar-lista {
-      @apply pr-8;
-      li {
-        @apply mt-5;
-        a {
-          @apply inline-flex items-center py-5 px-4 w-full cursor-pointer rounded-r-lg text-white text-lg hover:bg-white hover:text-neutral-70 transition-all;
-          &.active {
-            @apply bg-white text-neutral-70;
-          }
-        }
-      }
-    }
-  }
-}
 
-.rdt_Table {
-  @apply mt-16 table-auto w-full text-sm text-left text-white rounded-md  border border-neutral-10;
-}
-.rdt_TableHeadRow {
-  @apply hidden text-xs text-neutral-60 uppercase !bg-neutral-02;
-}
+
+
+
+
+

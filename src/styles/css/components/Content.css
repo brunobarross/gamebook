@@ -1,0 +1,6 @@
+@layer components {
+    .content {
+      @apply  mx-auto max-w-[1448px] w-full my-12 lg:mt-16 flex flex-col px-4 md:px-[3rem];
+  
+    }
+  }
