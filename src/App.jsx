@@ -17,7 +17,11 @@ import Home from "./Home/Home";
 import { HomeStorage } from "./Home/contexts/HomeContext";
 import { TabelaStorage } from "./Home/contexts/TabelaContext";
 import Sidebar from "./Home/components/Sidebar";
-
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+} from "react-router-dom";
 
 function App() {
   return (
