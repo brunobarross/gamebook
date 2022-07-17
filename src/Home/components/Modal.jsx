@@ -1,26 +1,25 @@
 import React, { useEffect } from 'react';
 import { X } from 'phosphor-react';
+import { HomeContext } from '../contexts/HomeContext';
 
-const Modal = ({
-  setNovoJogo,
-  setStatusJogo,
-  criarJogo,
-  setModalOpen,
-  modalOpen,
-  inputElement,
-}) => {
+const Modal = () => {
+  const home = React.useContext(HomeContext);
+
   return (
     <div className="modal-content">
       <div className="modal-header flex items-start justify-between">
         <h3 className="font-medium text-2xl text-neutral-80">Novo Jogo</h3>
         <span
           className="w-8 h-8 grid place-items-center bg-primary-pure-light cursor-pointer"
-          onClick={(e) => setModalOpen(!modalOpen)}
+          onClick={(e) => home.setModalOpen(!home.modalOpen)}
         >
           <X size={14} color={'#004993'} className="pointer-events-none" />
         </span>
       </div>
-      <form className="mt-8 flex flex-col justify-center " onSubmit={criarJogo}>
+      <form
+        className="mt-8 flex flex-col justify-center "
+        onSubmit={home.criarJogo}
+      >
         <input
           className="w-full border border-neutral-10 text-neutral-80 py-3 px-4 outline-none rounded-sm  visited:to-blue-400"
           id="nome"
@@ -28,12 +27,12 @@ const Modal = ({
           type="text"
           placeholder="Nome do jogo"
           required
-          ref={inputElement}
-          onChange={(e) => setNovoJogo(e.target.value)}
+          ref={home.inputElement}
+          onChange={(e) => home.setNovoJogo(e.target.value)}
         />
         <select
           className="mt-4 w-full border border-neutral-10 text-neutral-80  py-3 px-4 outline-none rounded-sm  visited:to-blue-400"
-          onChange={(e) => setStatusJogo(e.target.value)}
+          onChange={(e) => home.setStatusJogo(e.target.value)}
           id="status"
           name="status"
           required
