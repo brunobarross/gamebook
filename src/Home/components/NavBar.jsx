@@ -6,9 +6,9 @@ import { HomeContext } from '../contexts/HomeContext';
 const Navbar = () => {
 const home = React.useContext(HomeContext)
   return (
-    <div className="h-16 flex justify-between md:hidden px-4 items-center bg-primary-700 text-white w-full z-[100] border-b border-neutral-10">
-      <div className="logo w-40 pb-4">
-        <a href='#'>Gamebook</a>
+    <div className="h-16 flex justify-between md:hidden px-4 items-center bg-primary-700 text-white w-full border-b border-neutral-10">
+      <div className="logo w-40">
+        <a href='#' className='text-neutral-90 text-2xl font-semibold'>Gamebook</a>
       </div>
       <button
         className={`w-10 h-10 bg-white border border-gray-20 rounded-full grid place-items-center transition-opacity ${

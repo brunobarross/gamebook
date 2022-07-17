@@ -10,9 +10,9 @@
         li {
           @apply mt-5;
           a {
-            @apply inline-flex items-center py-5 px-4 w-full cursor-pointer rounded-r-lg text-white text-lg hover:bg-white hover:text-neutral-70 transition-all;
+            @apply inline-flex items-center py-4 px-4 w-full cursor-pointer rounded-r-lg text-white text-base hover:bg-white hover:text-neutral-70 transition-all;
             &.active {
-              @apply bg-white text-neutral-70;
+              @apply bg-white text-neutral-90;
             }
           }
         }
