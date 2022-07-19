@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Trash, Pen } from 'phosphor-react';
 import { HomeContext } from './HomeContext';
 
@@ -30,6 +30,7 @@ export const TabelaStorage = ({ children }) => {
           <button
             className=" grid place-items-center w-8 h-8 bg-primary-pure-40 rounded-[4px] ml-4 "
             id={row.id}
+            onClick={(e) => home.handleClickEditButton(row.id)}
           >
             <Pen size={16} color="#fff" />
           </button>

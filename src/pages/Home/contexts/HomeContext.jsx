@@ -7,8 +7,10 @@ import {
   deleteDoc,
   doc,
   getDocs,
+  setDoc,
   serverTimestamp,
   onSnapshot,
+  updateDoc,
 } from 'firebase/firestore';
 export const HomeContext = React.createContext();
 
@@ -19,27 +21,55 @@ export const HomeStorage = ({ children }) => {
   const jogosCollectionRef = collection(db, 'games');
   const [modalOpen, setModalOpen] = React.useState(false);
   const [sidebarOpen, setSideBarOpen] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [modalType, setModalType] = React.useState(null);
+  const [idJogo, setIdJogo] = React.useState(null);
   const inputElement = React.useRef();
+  const selectElement = React.useRef();
 
   const getGames = async () => {
+    setIsLoading(true);
+    onSnapshot(collection(db, 'games'), (snapshot) => {
+      try {
+        setJogos(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+      } catch (err) {
+        console.log(err);
+      } finally {
+        setIsLoading(false);
+      }
+    });
+  };
+
+  const criarJogo = async (e) => {
+    e.preventDefault();
     try {
-      const data = await getDocs(jogosCollectionRef);
-      setJogos(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+      const obj = {
+        nome: novoJogo,
+        status: statusJogo,
+        criado: serverTimestamp(),
+      };
+      await addDoc(jogosCollectionRef, obj);
+      setJogos(...jogos, obj);
+      inputElement.current.value = '';
+      selectElement.current.value = 'Abandonado';
+      setModalOpen(false);
     } catch (err) {
       console.log(err);
     }
   };
 
-  const criarJogo = async (e) => {
+  const updateGame = async (e) => {
     e.preventDefault();
-    const obj = {
-      nome: novoJogo,
-      status: statusJogo,
-      criado: serverTimestamp(),
-    };
-    await addDoc(jogosCollectionRef, obj);
-    setJogos(...jogos, obj);
-    inputElement.current.value = '';
+    if (jogos) {
+      try {
+        const dbJogos = doc(db, 'games', idJogo);
+        await updateDoc(dbJogos, {
+          status: statusJogo,
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    }
   };
 
   const deletarJogo = async (id) => {
@@ -53,10 +83,14 @@ export const HomeStorage = ({ children }) => {
     }
   };
 
+  const handleClickEditButton = async (id) => {
+    setIdJogo(id);
+    setModalType('edicao');
+    setModalOpen(!modalOpen);
+  };
+
   React.useEffect(() => {
-    onSnapshot(collection(db, 'games'), (snapshot) =>
-      setJogos(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))),
-    );
+    getGames();
   }, []);
 
   return (
@@ -71,10 +105,17 @@ export const HomeStorage = ({ children }) => {
         modalOpen,
         setModalOpen,
         inputElement,
+        selectElement,
         criarJogo,
         deletarJogo,
+        updateGame,
+        handleClickEditButton,
         setSideBarOpen,
         sidebarOpen,
+        isLoading,
+        setIsLoading,
+        modalType,
+        setModalType,
       }}
     >
       {children}
