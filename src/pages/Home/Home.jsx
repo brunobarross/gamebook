@@ -11,6 +11,15 @@ const Home = () => {
   const home = React.useContext(HomeContext);
   const tabela = React.useContext(TabelaContext);
   const { user } = React.useContext(AuthGoogleContext);
+  const modalRef = React.useRef(null)
+
+  
+
+  const closeModalOnOutsideClick = (e) =>{
+    if (e.target === modalRef.current) {
+      home.setModalOpen(false)
+    }
+  }
 
   return (
     <div className="mx-auto w-full sm:pl-[300px] relative overflow-hidden flex flex-col ">
@@ -33,7 +42,7 @@ const Home = () => {
           />
         )}
 
-        <div className={`modal-container ${home.modalOpen ? 'ativo' : ''}`}>
+        <div className={`modal-container ${home.modalOpen ? 'ativo' : ''}`} onClick={(e)=> closeModalOnOutsideClick (e)} ref={modalRef}>
           <Modal />
         </div>
       </div>
