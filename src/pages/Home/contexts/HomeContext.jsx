@@ -1,5 +1,5 @@
 import React from 'react';
-import { db } from '../../Firebase';
+import { db } from '../../../Firebase';
 import axios from 'axios';
 import {
   addDoc,
@@ -59,7 +59,6 @@ export const HomeStorage = ({ children }) => {
     );
   }, []);
 
-
   return (
     <HomeContext.Provider
       value={{
@@ -75,7 +74,7 @@ export const HomeStorage = ({ children }) => {
         criarJogo,
         deletarJogo,
         setSideBarOpen,
-        sidebarOpen
+        sidebarOpen,
       }}
     >
       {children}

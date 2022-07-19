@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import { db } from "./Firebase";
+import { useEffect, useRef, useState } from 'react';
+import { db } from './Firebase';
 import {
   addDoc,
   collection,
@@ -8,31 +8,21 @@ import {
   getDocs,
   serverTimestamp,
   onSnapshot,
-} from "firebase/firestore";
+} from 'firebase/firestore';
 
-
-
-
-import Home from "./Home/Home";
-import { HomeStorage } from "./Home/contexts/HomeContext";
-import { TabelaStorage } from "./Home/contexts/TabelaContext";
-import Sidebar from "./Home/components/Sidebar";
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-} from "react-router-dom";
+import Home from './pages/Home/Home';
+import { HomeStorage } from './pages/Home/contexts/HomeContext';
+import { TabelaStorage } from './pages/Home/contexts/TabelaContext';
+import Sidebar from './pages//Home/components/Sidebar';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { AppRoutes } from './Routes/Routes';
+import AuthGoogle from './Contexts/AuthGoogle';
 
 function App() {
   return (
-    <div className="flex">
-      <HomeStorage>
-        <TabelaStorage>
-          <Sidebar />
-          <Home />
-        </TabelaStorage>
-      </HomeStorage>
-    </div>
+    <AuthGoogle>
+      <AppRoutes />
+    </AuthGoogle>
   );
 }
 
